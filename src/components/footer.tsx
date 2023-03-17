@@ -4,8 +4,8 @@ import Image from "next/image";
 export default function Footer() {
   return (
     <>
-      <footer>
-        <hr></hr>
+      <footer className="my-2">
+        <hr/>
         <div className="flex justify-between items-center px-8 py-4 flex-col md:flex-row gap-10">
           <div className="">
             <Image src="logo.svg" width={80} height={80} alt="logo" />

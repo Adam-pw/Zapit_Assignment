@@ -2,12 +2,42 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import Footer from "../components/foooter";
+import Footer from "../components/footer";
 import Navbar from "@/components/Navbar";
+import MainPage from "@/components/MainPage";
+import SideBar from "@/components/SideBar";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export const getServerSideProps = async () => {
+  const res = await fetch(
+    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false"
+  );
+  const res2 = await fetch(
+    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+  );
+  const crypto = await res.json();
+  const allcrypto = await res2.json();
+  return {
+    props: {
+      crypto,
+      allcrypto,
+    },
+  };
+};
+export default function Home({ allcrypto }: any) {
+  const allCoins = allcrypto.filter((coin: { name: string }) =>
+    coin.name.toLowerCase()
+  );
+
+  const [search, setSearch] = useState("");
+
+  const handleChange = (e: any) => {
+    e.preventDefault();
+    setSearch(e.target.value.toLowerCase().includes(search.toLowerCase()));
+    console.log(search)
+  };
   return (
     <>
       <Head>
@@ -16,7 +46,17 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
+      <div className="overflow-x-hidden">
+        <Navbar />
+        <div className="flex">
+          <div className="md:w-1/5 w-0">
+            <SideBar />
+          </div>
+          <div className="md:w-4/5 h-2/6 w-full overflow-y-hidden">
+            <MainPage crypto={allCoins} onChange={handleChange} />
+          </div>
+        </div>
+      </div>
       <Footer />
     </>
   );
