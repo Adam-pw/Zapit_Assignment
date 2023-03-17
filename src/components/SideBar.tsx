@@ -22,7 +22,7 @@ export default function SideBar() {
   if ((windowWidth ?? 767) > 768) {
     return (
       <>
-        <div className="border border-black mx-4 my-0 p-4 text-xl h-1/6">
+        <div className="border border-black mx-4 p-4 text-xl">
           <div className="py-12 px-4 text-center">Menu 1</div>
           <div className="py-12 px-4 text-center">Menu 2</div>
           <div className="py-12 px-4 text-center">Menu 3</div>

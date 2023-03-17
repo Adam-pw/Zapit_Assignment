@@ -6,7 +6,8 @@ import Footer from "../components/footer";
 import Navbar from "@/components/Navbar";
 import MainPage from "@/components/MainPage";
 import SideBar from "@/components/SideBar";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
+import Searchbar from "@/components/searchbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,30 +15,24 @@ export const getServerSideProps = async () => {
   const res = await fetch(
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false"
   );
-  const res2 = await fetch(
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
-  );
   const crypto = await res.json();
-  const allcrypto = await res2.json();
   return {
     props: {
       crypto,
-      allcrypto,
     },
   };
 };
-export default function Home({ allcrypto }: any) {
-  const allCoins = allcrypto.filter((coin: { name: string }) =>
-    coin.name.toLowerCase()
-  );
-
+export default function Home({ crypto }: any) {
   const [search, setSearch] = useState("");
-
   const handleChange = (e: any) => {
     e.preventDefault();
-    setSearch(e.target.value.toLowerCase().includes(search.toLowerCase()));
-    console.log(search)
+    setSearch(e.target.value.toLowerCase());
+    console.log(search);
   };
+  const allCoins = crypto.filter((coin: any) =>
+    coin.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <>
       <Head>
@@ -48,6 +43,7 @@ export default function Home({ allcrypto }: any) {
       </Head>
       <div className="overflow-x-hidden">
         <Navbar />
+        <Searchbar onChange={handleChange} />
         <div className="flex">
           <div className="md:w-1/5 w-0">
             <SideBar />

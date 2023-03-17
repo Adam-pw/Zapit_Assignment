@@ -29,7 +29,7 @@ export default function Navbar() {
   if ((windowWidth ?? 769) > 768) {
     return (
       <>
-        <nav className="my-2">
+        <nav className="m-4">
           <div className="flex items-center text-xl font-bold gap-4">
             <Image src="logo.svg" width={80} height={80} alt="logo" />
             <div className="">Coinwatch</div>
@@ -40,7 +40,7 @@ export default function Navbar() {
   }
   return (
     <>
-      <nav className="my-2">
+      <nav className="m-4">
         <div className="flex items-center text-xl font-bold gap-4">
           <Image src="logo.svg" width={80} height={80} alt="logo" />
           <div className="flex justify-between w-full">
