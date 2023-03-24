@@ -5,8 +5,7 @@ import {
   ReactPortal,
 } from "react";
 
-export default function MainPage({ crypto }: any, { ...rest }) {
-  console.log({ ...rest });
+export default function MainPage({ crypto }: any) {
   return (
     <>
       <main>
@@ -20,9 +19,9 @@ export default function MainPage({ crypto }: any, { ...rest }) {
               </tr>
             </thead>
             <tbody>
-              {crypto.map((coin: any, index: any) => {
+              {crypto?.map((coin: any, index: any) => {
                 return (
-                  <tr key="index">
+                  <tr key={index}>
                     <td>{coin.market_cap_rank}</td>
                     <td>
                       <div className="flex gap-2">

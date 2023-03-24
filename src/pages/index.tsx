@@ -1,13 +1,12 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import Footer from "../components/footer";
 import Navbar from "@/components/Navbar";
 import MainPage from "@/components/MainPage";
 import SideBar from "@/components/SideBar";
-import { SetStateAction, useState } from "react";
-import Searchbar from "@/components/searchbar";
+import { useEffect, useState } from "react";
+import Searchbar from "@/components/SearchBar";
+import Filter from "@/components/Filter";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,23 +14,56 @@ export const getServerSideProps = async () => {
   const res = await fetch(
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false"
   );
+  const res2 = await fetch(
+    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=aave-tokens&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+  );
+  const res3 = await fetch("https://api.coingecko.com/api/v3/coins/categories");
   const crypto = await res.json();
+  const filtercrypto = await res2.json();
+  const categories = await res3.json();
   return {
     props: {
       crypto,
+      filtercrypto,
+      categories,
     },
   };
 };
-export default function Home({ crypto }: any) {
-  const [search, setSearch] = useState("");
+
+export default function Home({ crypto, filtercrypto, categories }: any) {
+  const [coins, setCoins] = useState<any>(crypto);
   const handleChange = (e: any) => {
     e.preventDefault();
-    setSearch(e.target.value.toLowerCase());
-    console.log(search);
+    setCoins(
+      crypto?.filter((coin: any) =>
+        coin.name.toLowerCase().includes(e.target.value.toLowerCase())
+      )
+    );
   };
-  const allCoins = crypto.filter((coin: any) =>
-    coin.name.toLowerCase().includes(search.toLowerCase())
+
+  const filterCoins = filtercrypto?.filter((coin: any) =>
+    coin.name.toLowerCase()
   );
+
+  const handleClick = (e: any) => {
+    e.preventDefault();
+    setCoins(abc);
+  };
+
+  const [option, setOption] = useState();
+  const handleChangefilter = (e: any) => {
+    e.preventDefault();
+    setOption(e.target.value);
+  };
+
+  const [abc, setAbc] = useState();
+  useEffect(() => {
+    fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${option}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+    ).then(async (res) => {
+      setAbc(await res.json());
+    });
+  }, [option]);
 
   return (
     <>
@@ -44,12 +76,17 @@ export default function Home({ crypto }: any) {
       <div className="overflow-x-hidden">
         <Navbar />
         <Searchbar onChange={handleChange} />
+        <Filter
+          props={categories}
+          onClick={handleClick}
+          handleChange={handleChangefilter}
+        />
         <div className="flex">
           <div className="md:w-1/5 w-0">
             <SideBar />
           </div>
           <div className="md:w-4/5 h-2/6 w-full overflow-y-hidden">
-            <MainPage crypto={allCoins} onChange={handleChange} />
+            <MainPage crypto={coins} />
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ export default function SideBar() {
     };
   }, []);
 
-  if ((windowWidth ?? 767) > 768) {
+  if ((windowWidth ?? 769) > 768) {
     return (
       <>
         <div className="border border-black mx-4 p-4 text-xl">
